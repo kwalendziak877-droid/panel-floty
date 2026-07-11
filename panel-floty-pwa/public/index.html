@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101d35">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flota">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./app.css">
+  <title>Panel Floty</title>
+</head>
+<body>
+  <div id="setupBanner" class="setup-banner" hidden>Tryb podglądu: dane są zapisane tylko na tym urządzeniu. Po publikacji włączą się synchronizacja i automatyczne przypomnienia.</div>
+  <header>
+    <div class="topbar">
+      <div class="brand"><img src="./icon.svg" alt=""><div><strong>Panel Floty</strong><span>Terminy zawsze pod kontrolą</span></div></div>
+      <div class="head-actions">
+        <button class="btn ghost" id="installBtn" hidden>↓ Zainstaluj</button>
+        <button class="btn ghost" id="settingsBtn">⚙ Ustawienia</button>
+        <button class="btn ghost icon-only" id="logoutBtn" title="Wyloguj">↪</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" hidden>
+    <section class="hero">
+      <div><h1>Twoja flota</h1><p id="todayText"></p></div>
+      <button class="btn primary" id="addBtn">＋ Dodaj pojazd</button>
+    </section>
+
+    <section class="stats">
+      <article><span>Wszystkie pojazdy</span><b id="statAll">0</b><small>ciągniki i naczepy</small></article>
+      <article><span>Ważne terminy</span><b id="statOk">0</b><small>powyżej 30 dni</small></article>
+      <article><span>Kończą się</span><b id="statSoon">0</b><small>w ciągu 30 dni</small></article>
+      <article><span>Po terminie</span><b id="statLate">0</b><small>wymaga działania</small></article>
+    </section>
+
+    <section class="tools">
+      <div class="search"><span>⌕</span><input id="search" placeholder="Numer rejestracyjny, marka lub VIN…"></div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-filter="all">Wszystkie</button>
+        <button class="filter" data-filter="truck">Ciągniki</button>
+        <button class="filter" data-filter="trailer">Naczepy</button>
+        <button class="filter" data-filter="alerts">Z alertami</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Lista pojazdów</h2><span id="resultCount">0 pozycji</span></div>
+      <div id="vehicleList"></div>
+    </section>
+  </main>
+
+  <dialog id="loginDialog">
+    <form id="loginForm" class="login-box">
+      <img src="./icon.svg" alt="">
+      <h2>Panel Floty</h2>
+      <p>Wpisz swoje hasło, aby otworzyć dane firmy.</p>
+      <label for="password">Hasło</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <p class="error" id="loginError"></p>
+      <button class="btn primary wide">Zaloguj się</button>
+    </form>
+  </dialog>
+
+  <dialog id="vehicleDialog">
+    <form id="vehicleForm">
+      <div class="modal-head"><h2 id="vehicleTitle">Dodaj pojazd</h2><button type="button" class="close" data-close="vehicleDialog">×</button></div>
+      <div class="modal-body grid">
+        <input type="hidden" id="vehicleId">
+        <div class="field"><label for="registration">Numer rejestracyjny *</label><input id="registration" maxlength="12" placeholder="np. WMA 12345" required></div>
+        <div class="field"><label for="type">Rodzaj *</label><select id="type"><option value="truck">Ciągnik siodłowy</option><option value="trailer">Naczepa</option></select></div>
+        <div class="field"><label for="brand">Marka</label><input id="brand" placeholder="np. Volvo"></div>
+        <div class="field"><label for="model">Model</label><input id="model" placeholder="np. FH 500"></div>
+        <div class="field full"><label for="vin">Numer VIN</label><input id="vin" maxlength="17"></div>
+        <h3 class="section-title">Terminy ważności</h3>
+        <div class="field"><label for="inspection">Przegląd techniczny *</label><input id="inspection" type="date" required></div>
+        <div class="field"><label for="tachograph">Legalizacja tachografu</label><input id="tachograph" type="date"><small>Możesz pominąć dla naczepy</small></div>
+        <div class="field"><label for="oc">Ubezpieczenie OC *</label><input id="oc" type="date" required></div>
+        <div class="field"><label for="ac">Ubezpieczenie AC</label><input id="ac" type="date"></div>
+        <div class="field full"><label for="notes">Notatki</label><textarea id="notes" rows="3" placeholder="Numer polisy, serwis, dodatkowe informacje"></textarea></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn secondary" data-close="vehicleDialog">Anuluj</button><button class="btn primary">Zapisz pojazd</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog">
+    <form id="settingsForm">
+      <div class="modal-head"><h2>Przypomnienia i instalacja</h2><button type="button" class="close" data-close="settingsDialog">×</button></div>
+      <div class="modal-body grid">
+        <div class="notice full"><b>Koszt: 0 zł.</b> Powiadomienia push zastępują płatne SMS-y i pojawiają się na ekranie telefonu.</div>
+        <div class="field full"><label for="email">E-mail do przypomnień</label><input id="email" type="email" placeholder="firma@example.pl"></div>
+        <div class="field full checks"><label><input id="pushEnabled" type="checkbox"> Powiadomienia na telefon</label><label><input id="emailEnabled" type="checkbox"> Wiadomości e-mail</label></div>
+        <div class="field full"><label>Przypomnij wcześniej</label><div class="checks inline"><label><input name="day" type="checkbox" value="30"> 30 dni</label><label><input name="day" type="checkbox" value="14"> 14 dni</label><label><input name="day" type="checkbox" value="7"> 7 dni</label><label><input name="day" type="checkbox" value="1"> 1 dzień</label></div></div>
+        <div class="field full"><button type="button" class="btn secondary" id="notifyBtn">🔔 Włącz powiadomienia na tym telefonie</button><small id="notifyStatus">Po publikacji aplikacja poprosi o zgodę na powiadomienia.</small></div>
+        <div class="field full install-help"><b>Instalacja na iPhonie</b><span>Otwórz aplikację w Safari → Udostępnij → Do ekranu początkowego.</span></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn secondary" data-close="settingsDialog">Anuluj</button><button class="btn primary">Zapisz ustawienia</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>

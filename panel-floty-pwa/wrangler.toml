@@ -1,0 +1,21 @@
+name = "panel-floty"
+main = "src/worker.js"
+compatibility_date = "2026-07-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "panel-floty"
+database_id = "UZUPELNIJ_PO_UTWORZENIU_BAZY"
+
+[triggers]
+crons = ["0 6 * * *"]
+
+[vars]
+ONESIGNAL_APP_ID = "UZUPELNIJ_APP_ID"
+ONESIGNAL_OWNER_ALIAS = "fleet-owner"
+APP_URL = "UZUPELNIJ_ADRES_APLIKACJI"

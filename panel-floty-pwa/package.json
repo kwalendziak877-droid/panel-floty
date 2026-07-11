@@ -1,0 +1,16 @@
+{
+  "name": "panel-floty",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "node --test tests/*.test.mjs",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute panel-floty --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute panel-floty --remote --file=schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

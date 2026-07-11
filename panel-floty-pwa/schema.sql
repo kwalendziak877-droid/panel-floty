@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+  id TEXT PRIMARY KEY,
+  registration TEXT NOT NULL UNIQUE,
+  type TEXT NOT NULL CHECK(type IN ('truck','trailer')),
+  brand TEXT NOT NULL DEFAULT '',
+  model TEXT NOT NULL DEFAULT '',
+  vin TEXT NOT NULL DEFAULT '',
+  inspection TEXT NOT NULL DEFAULT '',
+  tachograph TEXT NOT NULL DEFAULT '',
+  oc TEXT NOT NULL DEFAULT '',
+  ac TEXT NOT NULL DEFAULT '',
+  notes TEXT NOT NULL DEFAULT '',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+  id INTEGER PRIMARY KEY CHECK(id = 1),
+  email TEXT NOT NULL DEFAULT '',
+  email_enabled INTEGER NOT NULL DEFAULT 1,
+  push_enabled INTEGER NOT NULL DEFAULT 1,
+  reminder_days TEXT NOT NULL DEFAULT '[30,14,7]',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS notification_log (
+  notification_key TEXT PRIMARY KEY,
+  channel TEXT NOT NULL,
+  message TEXT NOT NULL,
+  sent_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT OR IGNORE INTO settings (id) VALUES (1);
