@@ -6,6 +6,7 @@ compatibility_date = "2026-07-01"
 directory = "./public"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"
@@ -16,6 +17,6 @@ database_id = "f480ea6d-2506-4e25-8fa8-758bee6e1bf1"
 crons = ["0 6 * * *"]
 
 [vars]
-ONESIGNAL_APP_ID = "UZUPELNIJ_APP_ID"
+ONESIGNAL_APP_ID = "72c6cd72-e02c-4a98-8146-43289250dcca"
 ONESIGNAL_OWNER_ALIAS = "fleet-owner"
-APP_URL = "UZUPELNIJ_ADRES_APLIKACJI"
+APP_URL = "https://panel-floty.kwalendziak877.workers.dev"
