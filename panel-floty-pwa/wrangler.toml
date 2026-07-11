@@ -10,7 +10,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "panel-floty"
-database_id = "UZUPELNIJ_PO_UTWORZENIU_BAZY"
+database_id = "f480ea6d-2506-4e25-8fa8-758bee6e1bf1"
 
 [triggers]
 crons = ["0 6 * * *"]
